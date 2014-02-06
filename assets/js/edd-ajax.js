@@ -45,10 +45,16 @@ jQuery(document).ready(function ($) {
 
 	                $('.cart_item.edd_subtotal span').html( response.subtotal );
 
+					var cartIsEmpty = false;
 	                if(!$('.edd-cart-item').length) {
 	                    $('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout').hide();
 	                    $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+						cartIsEmpty = true;
 	                }
+					
+					wp.hooks.doAction('edd_item_removed_from_cart', id, item);
+					if (cartIsEmpty)
+						wp.hooks.doAction('edd_cart_is_empty');
 	            }
 	        }
         }).fail(function (response) {
@@ -180,6 +186,8 @@ jQuery(document).ready(function ($) {
 	                        $('.edd-cart-added-alert', container).fadeOut();
 	                    }, 3000);
 	                }
+					
+					wp.hooks.doAction('edd_item_added_to_cart', download);
 	            }
 	        }
         }).fail(function (response) {

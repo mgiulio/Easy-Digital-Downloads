@@ -36,6 +36,9 @@ function edd_load_scripts() {
 	if ( isset( $post->ID ) ) {
 		$position = edd_get_item_position_in_cart( $post->ID );
 	}
+	
+	wp_register_script( 'edd-event-manager',  $js_dir . 'event-manager' . $suffix . '.js', array(), EDD_VERSION );
+	wp_register_script( 'edd-event-manager-tester',  $js_dir . 'event-manager-tester' . $suffix . '.js', array( 'edd-event-manager' ), EDD_VERSION );
 
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
@@ -62,7 +65,7 @@ function edd_load_scripts() {
 
 	// Load AJAX scripts, if enabled
 	if ( edd_is_ajax_enabled() ) {
-		wp_enqueue_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+		wp_enqueue_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery', 'edd-event-manager', 'edd-event-manager-tester' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl'                 => edd_get_ajax_url(),
 				'ajax_nonce'              => wp_create_nonce( 'edd_ajax_nonce' ),
